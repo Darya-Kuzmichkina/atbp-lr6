@@ -19,7 +19,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 31265899
+              "duration": 25131700
             }
           },
           {
@@ -32,7 +32,185 @@
             },
             "result": {
               "status": "passed",
-              "duration": 247200
+              "duration": 177599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 6,
+            "name": "ставка равна 1000",
+            "match": {
+              "location": "steps\\salarySteps.js:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 103599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 7,
+            "name": "я отправляю POST запрос на \"/api/salary/calculate\"",
+            "match": {
+              "location": "steps\\salarySteps.js:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 19853500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 8,
+            "name": "API возвращает статус-код 200",
+            "match": {
+              "location": "steps\\salarySteps.js:29"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 274199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "ответ содержит \"success\"",
+            "match": {
+              "location": "steps\\salarySteps.js:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 362099
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "расчет-заработной-платы;расчет-зарплаты-сотрудника",
+        "keyword": "Scenario Outline",
+        "line": 14,
+        "name": "Расчет зарплаты сотрудника",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "сервис доступен по адресу \"/api/tracker/2\"",
+            "match": {
+              "location": "steps\\salarySteps.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7378799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "сотрудник имеет 170 часов",
+            "match": {
+              "location": "steps\\salarySteps.js:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 170600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 6,
+            "name": "ставка равна 1000",
+            "match": {
+              "location": "steps\\salarySteps.js:19"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 261200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 7,
+            "name": "я отправляю POST запрос на \"/api/salary/calculate\"",
+            "match": {
+              "location": "steps\\salarySteps.js:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6863299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 8,
+            "name": "API возвращает статус-код 200",
+            "match": {
+              "location": "steps\\salarySteps.js:29"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 159700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 9,
+            "name": "ответ содержит \"success\"",
+            "match": {
+              "location": "steps\\salarySteps.js:35"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 142400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "расчет-заработной-платы;расчет-зарплаты-сотрудника",
+        "keyword": "Scenario Outline",
+        "line": 15,
+        "name": "Расчет зарплаты сотрудника",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "сервис доступен по адресу \"/api/tracker/2\"",
+            "match": {
+              "location": "steps\\salarySteps.js:8"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5614799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 5,
+            "name": "сотрудник имеет 800 часов",
+            "match": {
+              "location": "steps\\salarySteps.js:15"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1943899
             }
           },
           {
@@ -58,185 +236,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 24595799
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 8,
-            "name": "API возвращает статус-код 200",
-            "match": {
-              "location": "steps\\salarySteps.js:29"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 181600
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 9,
-            "name": "ответ содержит \"success\"",
-            "match": {
-              "location": "steps\\salarySteps.js:35"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 210599
-            }
-          }
-        ],
-        "tags": [],
-        "type": "scenario"
-      },
-      {
-        "description": "",
-        "id": "расчет-заработной-платы;расчет-зарплаты-сотрудника",
-        "keyword": "Scenario Outline",
-        "line": 14,
-        "name": "Расчет зарплаты сотрудника",
-        "steps": [
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 4,
-            "name": "сервис доступен по адресу \"/api/tracker/2\"",
-            "match": {
-              "location": "steps\\salarySteps.js:8"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 7012600
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 5,
-            "name": "сотрудник имеет 170 часов",
-            "match": {
-              "location": "steps\\salarySteps.js:15"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 132600
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 6,
-            "name": "ставка равна 1000",
-            "match": {
-              "location": "steps\\salarySteps.js:19"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 346300
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 7,
-            "name": "я отправляю POST запрос на \"/api/salary/calculate\"",
-            "match": {
-              "location": "steps\\salarySteps.js:23"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 11951199
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Then ",
-            "line": 8,
-            "name": "API возвращает статус-код 200",
-            "match": {
-              "location": "steps\\salarySteps.js:29"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 186199
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "And ",
-            "line": 9,
-            "name": "ответ содержит \"success\"",
-            "match": {
-              "location": "steps\\salarySteps.js:35"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 185699
-            }
-          }
-        ],
-        "tags": [],
-        "type": "scenario"
-      },
-      {
-        "description": "",
-        "id": "расчет-заработной-платы;расчет-зарплаты-сотрудника",
-        "keyword": "Scenario Outline",
-        "line": 15,
-        "name": "Расчет зарплаты сотрудника",
-        "steps": [
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 4,
-            "name": "сервис доступен по адресу \"/api/tracker/2\"",
-            "match": {
-              "location": "steps\\salarySteps.js:8"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 7740199
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 5,
-            "name": "сотрудник имеет 800 часов",
-            "match": {
-              "location": "steps\\salarySteps.js:15"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 141100
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "Given ",
-            "line": 6,
-            "name": "ставка равна 1000",
-            "match": {
-              "location": "steps\\salarySteps.js:19"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 88099
-            }
-          },
-          {
-            "arguments": [],
-            "keyword": "When ",
-            "line": 7,
-            "name": "я отправляю POST запрос на \"/api/salary/calculate\"",
-            "match": {
-              "location": "steps\\salarySteps.js:23"
-            },
-            "result": {
-              "status": "passed",
-              "duration": 5921599
+              "duration": 5576099
             }
           },
           {
@@ -249,7 +249,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 130200
+              "duration": 281200
             }
           },
           {
@@ -262,7 +262,7 @@
             },
             "result": {
               "status": "passed",
-              "duration": 131200
+              "duration": 168200
             }
           }
         ],
