@@ -1,0 +1,206 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  unit-tests:
+    name: Unit | Node ${{ matrix.node-version }} | ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test:unit
+
+      - name: Upload unit allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-unit-${{ matrix.os }}-node-${{ matrix.node-version }}
+          path: allure-results/
+          if-no-files-found: ignore
+
+  api-tests:
+    name: API | Node ${{ matrix.node-version }} | ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start server
+        shell: bash
+        run: |
+          npm start &
+          npx wait-on http://localhost:3000
+
+      - name: Run API tests
+        run: npm run test:api
+
+      - name: Upload API allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-api-${{ matrix.os }}-node-${{ matrix.node-version }}
+          path: allure-results/
+          if-no-files-found: ignore
+
+  ui-tests:
+    name: UI | Node ${{ matrix.node-version }} | ${{ matrix.os }} | ${{ matrix.browser }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18, 20, 22]
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/ms-playwright
+            C:\Users\runneradmin\AppData\Local\ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Playwright browsers
+        run: npx playwright install ${{ matrix.browser }} --with-deps
+
+      - name: Run UI tests
+        run: npx start-server-and-test start http://localhost:3000 "npx playwright test --reporter=line,allure-playwright --project=${{ matrix.browser }}"
+
+      - name: Upload UI allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-ui-${{ matrix.os }}-${{ matrix.browser }}-node-${{ matrix.node-version }}
+          path: allure-results/
+          if-no-files-found: ignore
+
+      - name: Upload Playwright HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.os }}-${{ matrix.browser }}-node-${{ matrix.node-version }}
+          path: playwright-report/
+          if-no-files-found: ignore
+
+  allure-report:
+    name: Build and publish Allure report
+    runs-on: ubuntu-latest
+    needs: [unit-tests, api-tests, ui-tests]
+    if: always()
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-artifacts
+
+      - name: Merge Allure results
+        shell: bash
+        run: |
+          mkdir -p merged-allure-results
+          find all-artifacts -type f \( -name "*.json" -o -name "*.txt" -o -name "*.png" -o -name "*.webm" -o -name "*.zip" \) -exec cp {} merged-allure-results/ \;
+
+      - name: Generate Allure report
+        run: npx allure generate merged-allure-results --clean -o allure-report
+
+      - name: Upload Allure report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+          if-no-files-found: ignore
+
+      - name: Deploy Allure report to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          destination_dir: allure-reports/${{ github.run_number }}
+
+  docker-tests:
+    name: Docker smoke test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t salary-ci-app .
+      - name: Run tests inside Docker container
+        run: docker run --rm salary-ci-app sh -c "npm run test:unit && npm run test:api"
+
+  notify:
+    name: Telegram notification
+    runs-on: ubuntu-latest
+    needs: [unit-tests, api-tests, ui-tests, allure-report, docker-tests]
+    if: always() && secrets.TELEGRAM_BOT_TOKEN != '' && secrets.TELEGRAM_CHAT_ID != ''
+    steps:
+      - name: Send Telegram message
+        uses: appleboy/telegram-action@v1.0.1
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            CI run #${{ github.run_number }} for ${{ github.repository }}
+            Unit: ${{ needs.unit-tests.result }}
+            API: ${{ needs.api-tests.result }}
+            UI: ${{ needs.ui-tests.result }}
+            Allure: ${{ needs.allure-report.result }}
+            Docker: ${{ needs.docker-tests.result }}
